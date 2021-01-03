@@ -1,11 +1,15 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.data.user.Customer;
 import com.udacity.jdnd.course3.critter.data.user.CustomerDTO;
 import com.udacity.jdnd.course3.critter.data.user.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.data.user.EmployeeRequestDTO;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,14 +23,28 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    private CustomerService customerService;
+
+    public UserController(CustomerService customerService /*, EmployeeService employeeService*/) {
+        this.customerService = customerService;
+    }
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        Customer customer = dtoToCustomer(customerDTO);
+        customer = customerService.save(customer);
+        return customerToCustomerDTO(customer);
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customerList = customerService.getAllCustomers();
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
+        for (Customer c : customerList) {
+            customerDTOList.add(customerToCustomerDTO(c));
+        }
+
+        return customerDTOList;
     }
 
     @GetMapping("/customer/pet/{petId}")
@@ -54,4 +72,15 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
+    public CustomerDTO customerToCustomerDTO(Customer customer) {
+        CustomerDTO dto = new CustomerDTO();
+        BeanUtils.copyProperties(customer, dto);
+        return dto;
+    }
+
+    public Customer dtoToCustomer(CustomerDTO dto) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(dto, customer);
+        return customer;
+    }
 }
