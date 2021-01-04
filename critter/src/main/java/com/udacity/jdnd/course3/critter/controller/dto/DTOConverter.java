@@ -1,4 +1,4 @@
-package com.udacity.jdnd.course3.critter.controller;
+package com.udacity.jdnd.course3.critter.controller.dto;
 
 import org.springframework.beans.BeanUtils;
 

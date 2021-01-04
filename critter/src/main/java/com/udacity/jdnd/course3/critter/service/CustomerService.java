@@ -1,8 +1,7 @@
 package com.udacity.jdnd.course3.critter.service;
 
-import com.udacity.jdnd.course3.critter.data.user.Customer;
-import com.udacity.jdnd.course3.critter.data.user.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.udacity.jdnd.course3.critter.data.entity.Customer;
+import com.udacity.jdnd.course3.critter.data.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

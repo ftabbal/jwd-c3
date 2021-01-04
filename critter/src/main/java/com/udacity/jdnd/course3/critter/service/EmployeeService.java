@@ -1,7 +1,7 @@
 package com.udacity.jdnd.course3.critter.service;
 
-import com.udacity.jdnd.course3.critter.data.user.Employee;
-import com.udacity.jdnd.course3.critter.data.user.EmployeeRepository;
+import com.udacity.jdnd.course3.critter.data.entity.Employee;
+import com.udacity.jdnd.course3.critter.data.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class EmployeeService {
         if (optionalEmployee.isPresent()) {
             return optionalEmployee.get();
         } else {
-            throw new ObjectNotFoundException("Cannot find employee for id: " + id);
+            throw new ObjectNotFoundException("Cannot find employee with id: " + id);
         }
     }
 }

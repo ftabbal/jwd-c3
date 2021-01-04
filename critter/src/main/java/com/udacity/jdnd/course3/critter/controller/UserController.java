@@ -1,6 +1,11 @@
 package com.udacity.jdnd.course3.critter.controller;
 
-import com.udacity.jdnd.course3.critter.data.user.*;
+import com.udacity.jdnd.course3.critter.controller.dto.CustomerDTO;
+import com.udacity.jdnd.course3.critter.controller.dto.DTOConverter;
+import com.udacity.jdnd.course3.critter.controller.dto.EmployeeDTO;
+import com.udacity.jdnd.course3.critter.controller.dto.EmployeeRequestDTO;
+import com.udacity.jdnd.course3.critter.data.entity.Customer;
+import com.udacity.jdnd.course3.critter.data.entity.Employee;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;

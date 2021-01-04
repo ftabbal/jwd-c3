@@ -1,13 +1,8 @@
-package com.udacity.jdnd.course3.critter.data.schedule;
-
-import com.udacity.jdnd.course3.critter.data.pet.Pet;
-import com.udacity.jdnd.course3.critter.data.user.Employee;
-import com.udacity.jdnd.course3.critter.data.user.EmployeeSkill;
+package com.udacity.jdnd.course3.critter.data.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Schedule {
