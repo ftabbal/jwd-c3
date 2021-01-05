@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.controller.dto;
 
+import com.udacity.jdnd.course3.critter.data.entity.Pet;
 import com.udacity.jdnd.course3.critter.data.entity.PetType;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
 
@@ -62,5 +64,18 @@ public class PetDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Pet toEntity() {
+        Pet pet = new Pet();
+        BeanUtils.copyProperties(this, pet);
+        return pet;
+    }
+
+    static public PetDTO fromEntity(Pet pet) {
+        PetDTO petDTO = new PetDTO();
+        BeanUtils.copyProperties(pet, petDTO);
+        petDTO.setOwnerId(pet.getOwner().getId());
+        return petDTO;
     }
 }
