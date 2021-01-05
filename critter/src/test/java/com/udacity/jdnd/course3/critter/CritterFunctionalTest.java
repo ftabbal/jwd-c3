@@ -51,7 +51,7 @@ public class CritterFunctionalTest {
         CustomerDTO customerDTO = createCustomerDTO();
         CustomerDTO newCustomer = userController.saveCustomer(customerDTO);
         CustomerDTO retrievedCustomer = userController.getAllCustomers().get(0);
-        Assertions.assertEquals(newCustomer.getName(), customerDTO.getName());
+        Assertions.assertEquals(customerDTO.getName(), newCustomer.getName());
         Assertions.assertEquals(newCustomer.getId(), retrievedCustomer.getId());
         Assertions.assertTrue(retrievedCustomer.getId() > 0);
     }
@@ -77,8 +77,8 @@ public class CritterFunctionalTest {
 
         //make sure pet contains customer id
         PetDTO retrievedPet = petController.getPet(newPet.getId());
-        Assertions.assertEquals(retrievedPet.getId(), newPet.getId());
-        Assertions.assertEquals(retrievedPet.getOwnerId(), newCustomer.getId());
+        Assertions.assertEquals(newPet.getId(), retrievedPet.getId());
+        Assertions.assertEquals(newCustomer.getId(), retrievedPet.getOwnerId());
 
         //make sure you can retrieve pets by owner
         List<PetDTO> pets = petController.getPetsByOwner(newCustomer.getId());
@@ -88,7 +88,7 @@ public class CritterFunctionalTest {
         //check to make sure customer now also contains pet
         CustomerDTO retrievedCustomer = userController.getAllCustomers().get(0);
         Assertions.assertTrue(retrievedCustomer.getPetIds() != null && retrievedCustomer.getPetIds().size() > 0);
-        Assertions.assertEquals(retrievedCustomer.getPetIds().get(0), retrievedPet.getId());
+        Assertions.assertEquals(retrievedPet.getId(), retrievedCustomer.getPetIds().get(0));
     }
 
     @Test
@@ -104,9 +104,9 @@ public class CritterFunctionalTest {
         PetDTO newPet2 = petController.savePet(petDTO);
 
         List<PetDTO> pets = petController.getPetsByOwner(newCustomer.getId());
-        Assertions.assertEquals(pets.size(), 2);
-        Assertions.assertEquals(pets.get(0).getOwnerId(), newCustomer.getId());
-        Assertions.assertEquals(pets.get(0).getId(), newPet.getId());
+        Assertions.assertEquals(2, pets.size());
+        Assertions.assertEquals(newCustomer.getId(), pets.get(0).getOwnerId());
+        Assertions.assertEquals(newPet.getId(), pets.get(0).getId());
     }
 
     @Test
@@ -119,8 +119,8 @@ public class CritterFunctionalTest {
         PetDTO newPet = petController.savePet(petDTO);
 
         CustomerDTO owner = userController.getOwnerByPet(newPet.getId());
-        Assertions.assertEquals(owner.getId(), newCustomer.getId());
-        Assertions.assertEquals(owner.getPetIds().get(0), newPet.getId());
+        Assertions.assertEquals(newCustomer.getId(), owner.getId());
+        Assertions.assertEquals(newPet.getId(), owner.getPetIds().get(0));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class CritterFunctionalTest {
 
         Set<Long> eIds1 = userController.findEmployeesForService(er1).stream().map(EmployeeDTO::getId).collect(Collectors.toSet());
         Set<Long> eIds1expected = Sets.newHashSet(emp1n.getId(), emp2n.getId());
-        Assertions.assertEquals(eIds1, eIds1expected);
+        Assertions.assertEquals(eIds1expected, eIds1);
 
         //make a request that matches only employee 3
         EmployeeRequestDTO er2 = new EmployeeRequestDTO();
@@ -170,7 +170,7 @@ public class CritterFunctionalTest {
 
         Set<Long> eIds2 = userController.findEmployeesForService(er2).stream().map(EmployeeDTO::getId).collect(Collectors.toSet());
         Set<Long> eIds2expected = Sets.newHashSet(emp3n.getId());
-        Assertions.assertEquals(eIds2, eIds2expected);
+        Assertions.assertEquals(eIds2expected, eIds2);
     }
 
     @Test
@@ -191,10 +191,10 @@ public class CritterFunctionalTest {
         scheduleController.createSchedule(createScheduleDTO(petList, employeeList, date, skillSet));
         ScheduleDTO scheduleDTO = scheduleController.getAllSchedules().get(0);
 
-        Assertions.assertEquals(scheduleDTO.getActivities(), skillSet);
-        Assertions.assertEquals(scheduleDTO.getDate(), date);
-        Assertions.assertEquals(scheduleDTO.getEmployeeIds(), employeeList);
-        Assertions.assertEquals(scheduleDTO.getPetIds(), petList);
+        Assertions.assertEquals(skillSet, scheduleDTO.getActivities());
+        Assertions.assertEquals(date, scheduleDTO.getDate());
+        Assertions.assertEquals(employeeList, scheduleDTO.getEmployeeIds());
+        Assertions.assertEquals(petList, scheduleDTO.getPetIds());
     }
 
     @Test
