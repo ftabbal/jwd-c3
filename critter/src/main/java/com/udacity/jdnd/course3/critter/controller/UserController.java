@@ -1,16 +1,17 @@
 package com.udacity.jdnd.course3.critter.controller;
 
 import com.udacity.jdnd.course3.critter.controller.dto.CustomerDTO;
-import com.udacity.jdnd.course3.critter.controller.dto.DTOConverter;
 import com.udacity.jdnd.course3.critter.controller.dto.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.controller.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.data.entity.Customer;
 import com.udacity.jdnd.course3.critter.data.entity.Employee;
+import com.udacity.jdnd.course3.critter.data.entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,49 +27,57 @@ public class UserController {
 
     private CustomerService customerService;
     private EmployeeService employeeService;
-    private DTOConverter dtoConverter;
 
     public UserController(CustomerService customerService, EmployeeService employeeService) {
         this.customerService = customerService;
         this.employeeService = employeeService;
-        dtoConverter = new DTOConverter();
     }
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        Customer customer = dtoConverter.convert(customerDTO, Customer.class);
+        Customer customer = customerDTO.toEntity();
         customer = customerService.save(customer);
-        return dtoConverter.convert(customer, CustomerDTO.class);
+        return CustomerDTO.fromEntity(customer);
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
         List<Customer> customerList = customerService.getAllCustomers();
-
-        return dtoConverter.convertList(customerList, CustomerDTO.class);
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
+        for (Customer c : customerList)
+            customerDTOList.add(CustomerDTO.fromEntity(c));
+        return customerDTOList;
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        Customer customer = customerService.getByPetId(petId);
+        List<Long> petIds = new ArrayList<>();
+        for (Pet pet : customer.getPets())
+            petIds.add(pet.getId());
+        CustomerDTO customerDTO = CustomerDTO.fromEntity(customer);
+        customerDTO.setPetIds(petIds);
+        return customerDTO;
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = dtoConverter.convert(employeeDTO, Employee.class);
+        Employee employee = employeeDTO.toEntity();
         employeeService.save(employee);
-        return dtoConverter.convert(employee, EmployeeDTO.class);
+        return EmployeeDTO.fromEntity(employee);
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
         Employee employee = employeeService.getEmployee(employeeId);
-        return dtoConverter.convert(employee, EmployeeDTO.class);
+        return EmployeeDTO.fromEntity(employee);
     }
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = employeeService.getEmployee(employeeId);
+        employee.setDaysAvailable(daysAvailable);
+        employeeService.save(employee);
     }
 
     @GetMapping("/employee/availability")

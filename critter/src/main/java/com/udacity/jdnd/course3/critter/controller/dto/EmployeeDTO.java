@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.controller.dto;
 
+import com.udacity.jdnd.course3.critter.data.entity.Employee;
 import com.udacity.jdnd.course3.critter.data.entity.EmployeeSkill;
+import org.springframework.beans.BeanUtils;
 
 import java.time.DayOfWeek;
 import java.util.Set;
@@ -45,5 +47,17 @@ public class EmployeeDTO {
 
     public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
         this.daysAvailable = daysAvailable;
+    }
+
+    public Employee toEntity() {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(this, employee);
+        return employee;
+    }
+
+    static public EmployeeDTO fromEntity(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 }

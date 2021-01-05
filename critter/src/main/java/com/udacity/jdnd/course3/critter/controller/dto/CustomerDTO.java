@@ -1,5 +1,11 @@
 package com.udacity.jdnd.course3.critter.controller.dto;
 
+import com.udacity.jdnd.course3.critter.data.entity.Customer;
+import com.udacity.jdnd.course3.critter.data.entity.Employee;
+import com.udacity.jdnd.course3.critter.data.entity.Pet;
+import org.springframework.beans.BeanUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,5 +57,23 @@ public class CustomerDTO {
 
     public void setPetIds(List<Long> petIds) {
         this.petIds = petIds;
+    }
+
+    public Customer toEntity() {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(this, customer);
+        return customer;
+    }
+
+    static public CustomerDTO fromEntity(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO);
+        List<Long> petsIds = new ArrayList<>();
+
+        for (Pet pet : customer.getPets())
+            petsIds.add(pet.getId());
+
+        customerDTO.setPetIds(petsIds);
+        return customerDTO;
     }
 }
