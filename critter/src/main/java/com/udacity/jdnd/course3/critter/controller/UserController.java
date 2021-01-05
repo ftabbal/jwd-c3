@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.controller.dto.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.controller.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.data.entity.Customer;
 import com.udacity.jdnd.course3.critter.data.entity.Employee;
+import com.udacity.jdnd.course3.critter.data.entity.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.data.entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
@@ -82,6 +83,13 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        DayOfWeek day = employeeDTO.getDate().getDayOfWeek();
+        Set<EmployeeSkill> skillSet = employeeDTO.getSkills();
+        List<Employee> employeeList = employeeService.getEmployeesByDateAndSkill(day, skillSet);
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        for (Employee e : employeeList) {
+            employeeDTOList.add(EmployeeDTO.fromEntity(e));
+        }
+        return employeeDTOList;
     }
 }
